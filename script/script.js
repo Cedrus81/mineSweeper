@@ -42,7 +42,10 @@ function clickOnMine(elCell) {
 
 function cellClicked(elCell) {
     if (gGame.hintMode === true) {
+        if (elCell.classList.contains('.expanded')) return
         hintClicked(elCell)
+        gGame.hintMode = false
+        return
     }
     elCell.classList.remove('unclicked')
     if (!gGame.isExpand) {

@@ -13,15 +13,18 @@ function hintClicked(elCell) {
         for (let j = cellJ - 1; j < cellJ + 2; j++) {
             if (j === - 1) continue
             if (j === gBoard.length) continue
-            elCell.classList.add('expanded')
+            let newCell = document.querySelector(`td[data-i="${i}"][data-j="${j}"]`)
+            newCell.classList.add('expanded')
             if (gBoard[i][j].isMine) {
-                elCell.innerText = MINE
+                newCell.innerText = MINE
             }
             else {
-                elCell.innerText = setMinesNegsCount(gBoard, { i, j })
+                newCell.innerText = setMinesNegsCount(gBoard, { i, j })
             }
-            debugger
-            setTimeout(() => elCell.classList.remove('expanded'), 1000)
+            setTimeout(() => {
+                newCell.classList.remove('expanded')
+                newCell.innerText = ' '
+            }, 1000)
         }
 
     }

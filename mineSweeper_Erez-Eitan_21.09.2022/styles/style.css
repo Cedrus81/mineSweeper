@@ -1,0 +1,8 @@
+.unclicked{
+    cursor: pointer;
+    color: rgba(0,0,0,0);
+    border: 1px solid;
+}
+table, td {
+    border: 1px solid;
+  }

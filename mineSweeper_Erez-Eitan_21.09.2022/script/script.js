@@ -1,7 +1,7 @@
 const MINE = 'X'
-const EMPTY = 'O'
+const EMPTY = '  '
 const FLAG = 'F'
-var gGame = { flags: 0 }
+var gGame = { flags: 0, isExpand: false }
 var gBoard
 //build board, render board, start timer
 function initGame(matSize, mineNum) {
@@ -81,42 +81,69 @@ function renderBoard(board) {
 }
 
 function cellClicked(elCell) {
-    if (elCell.innerText === MINE) {
-        console.log('gameover')
-        elCell.innerText = MINE
-        return
-    }
-    else if (elCell.innerText === FLAG) {
-        let isMine = elCell.getAttribute("isMine")
-        if (isMine) {
-            elCell.innerText = MINE
+    if (!gGame.isExpand) {
+        if (elCell.innerText === MINE) {
+
             console.log('gameover')
+            elCell.innerText = MINE
+            checkGameOver()
             return
         }
+
+        if (elCell.innerText === FLAG) {
+            let isMine = elCell.getAttribute("isMine")
+
+            if (isMine) {
+                elCell.innerText = MINE
+                console.log('gameover')
+                checkGameOver()
+                return
+            }
+        }
     }
-    else {
-        let i = +elCell.getAttribute("data-i")
-        let j = +elCell.getAttribute("data-j")
-        elCell.innerText = setMinesNegsCount(gBoard, { i, j })
-        elCell.classList.remove('unclicked')
+    let i = +elCell.getAttribute("data-i")
+    let j = +elCell.getAttribute("data-j")
+    elCell.innerText = setMinesNegsCount(gBoard, { i, j })
+    if (elCell.innerText == 0) {
+        expandShown(gBoard, elCell, { i, j })
     }
+    elCell.classList.remove('unclicked')
 }
 
-// //flag
+//flag
 function cellMarked(elCell) {
     if (elCell.innerText === FLAG) return
+    gGame.flags++
     if (elCell.innerText === MINE) elCell.setAttribute("isMine", true)
-    //model
 
-    //DOM
     elCell.innerText = FLAG
     elCell.classList.remove('unclicked')
 }
 
-// checkGameOver()
+function checkGameOver() {
+    let unclicked = document.querySelectorAll(".unclicked")
+    for (let cell of unclicked) {
+        cell.classList.remove('unclicked')
+    }
+}
 
 // //bonus
-// expandShown(board, elCell, i, j)
+function expandShown(board, elCell, location) {
+    gGame.isExpand = true
+    for (let i = location.i - 1; i < location.i + 2; i++) {
+        if (i === -1) continue
+        if (i === board.length) continue
+        for (let j = location.j - 1; j < location.j + 2; j++) {
+            if (location.i === i && location.j === j) continue
+            if (j === -1) continue
+            if (j === board[i].length) continue
+            elCell = document.querySelector(`td[data-i="${i}"][data-j="${j}"]`)
+            elCell.innerText = setMinesNegsCount(board, { i, j })
+            elCell.classList.remove('unclicked')
+        }
+    }
+    gGame.isExpand = false
+}
 
 
 function getRandomInt(min, max) {

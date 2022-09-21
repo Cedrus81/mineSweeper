@@ -1,0 +1,11 @@
+.unclicked{
+    cursor: pointer;
+    color: rgba(0,0,0,0);
+    border: 1px solid;
+}
+.expanded{
+    background-color: gray;
+}
+table, td {
+    border: 1px solid;
+  }

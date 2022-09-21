@@ -1,11 +1,20 @@
 const MINE = 'X'
-const EMPTY = '  '
 const FLAG = 'F'
-var gGame = { flags: 0, isExpand: false }
+
+var gGame = {
+    markedCount: 0,
+    shownCount: 0,
+    secsPassed: 0,
+    isExpand: false,
+    firstClick: true,
+    lives: 3,
+}
+var gLevel = {}
 var gBoard
 //build board, render board, start timer
 function initGame(matSize, mineNum) {
-    gGame.flags = mineNum
+    gLevel.size = matSize
+    gLevel.mines = mineNum
     buildBoard(matSize, mineNum)
     renderBoard(gBoard)
 }
@@ -15,21 +24,19 @@ function buildBoard(matSize, mineNum) {
     let mines = mineGenerator(matSize, mineNum)
     let mineIdx = 0
     gBoard = []
+    console.log(mines)
     for (let i = 0; i < matSize; i++) {
         gBoard[i] = []
         for (let j = 0; j < matSize; j++) {
+            gBoard[i][j] = {}
+            gBoard[i][j].isShown = false
             if (mines[0] === mineIdx) {
-                gBoard[i][j] = MINE
+                gBoard[i][j].isMine = true
                 mines.splice(0, 1)
-            }
-            else {
-                gBoard[i][j] = EMPTY
             }
             mineIdx++
         }
-
     }
-    console.table(gBoard)
 }
 
 function mineGenerator(matSize, mineNum) {
@@ -58,7 +65,7 @@ function setMinesNegsCount(board, location) {
             if (location.i === i && location.j === j) continue
             if (j === -1) continue
             if (j === board[i].length) continue
-            if (board[i][j] === MINE) mineCount++
+            if (board[i][j].isMine) mineCount++
         }
     }
     return mineCount
@@ -70,9 +77,10 @@ function renderBoard(board) {
     for (let i = 0; i < board.length; i++) {
         strHTML += '\t\n<tr>\n'
         for (let j = 0; j < board[i].length; j++) {
+            let text = board[i][j].isMine ? MINE : setMinesNegsCount(gBoard, { i, j })
             strHTML += `\t<td data-i="${i}" data-j="${j}" `
             strHTML += `onclick="cellClicked(this)" oncontextmenu="cellMarked(this); return false;" `
-            strHTML += `class="unclicked">${board[i][j]}</td>\n`
+            strHTML += `class="unclicked"><span class="hidden">${text}</span></td>\n`
         }
         strHTML += '\t\n</tr>\n'
     }
@@ -82,47 +90,69 @@ function renderBoard(board) {
 
 function cellClicked(elCell) {
     elCell.classList.remove('unclicked')
+    elCell.classList.add('expanded')
     if (!gGame.isExpand) {
-        if (elCell.innerText === MINE) {
 
-            console.log('gameover')
-            checkGameOver()
-            return
+        if (elCell.innerText === MINE) {
+            if (gGame.firstClick === true) {
+                normalCell(elCell)
+                return
+            }
+            gGame.lives--
+            if (!game.lives) {
+                checkGameOver()
+                return
+            }
         }
 
         if (elCell.innerText === FLAG) {
             let isMine = elCell.getAttribute("isMine")
-
             if (isMine) {
-                console.log('gameover')
                 checkGameOver()
                 return
             }
         }
     }
+    normalCell(elCell)
+}
+
+// handle a non-flag or bomb Cell
+function normalCell(elCell) {
+    gGame.firstClick = false
     let i = +elCell.getAttribute("data-i")
     let j = +elCell.getAttribute("data-j")
     elCell.innerText = setMinesNegsCount(gBoard, { i, j })
     if (elCell.innerText == 0) {
-        // debugger
         expandShown(gBoard, elCell, { i, j })
     }
+    gGame.shownCount++
 }
 
 //flag
 function cellMarked(elCell) {
     if (elCell.innerText === FLAG) return
-    gGame.flags++
+    gGame.markedCount++
     if (elCell.innerText === MINE) elCell.setAttribute("isMine", true)
 
+    //DOM
+    let i = +elCell.getAttribute("data-i")
+    let j = +elCell.getAttribute("data-j")
+    gBoard[i][j].isMarked = true
+
+    //MODEL
     elCell.innerText = FLAG
     elCell.classList.remove('unclicked')
 }
 
 function checkGameOver() {
     let unclicked = document.querySelectorAll(".unclicked")
+    let hidden = document.querySelectorAll(".hidden")
     for (let cell of unclicked) {
         cell.classList.remove('unclicked')
+        cell.classList.add('expanded')
+    }
+    for (let span of hidden) {
+        span.classList.remove('hidden')
     }
 }
 
@@ -147,7 +177,3 @@ function expandShown(board, elCell, location) {
     gGame.isExpand = false
 }
 
-
-function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min)) + min
-}

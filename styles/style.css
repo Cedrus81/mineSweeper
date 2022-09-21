@@ -1,11 +1,52 @@
+
+body{
+    background-color: #ff9a3c;
+}
+img{
+    max-width: 20px;
+    max-height: 20px;
+}
+
+footer{
+    position: fixed;
+    width: fit-content;
+    border-top-right-radius:3px ;
+    border-top-left-radius:3px ;
+    padding: 20px;
+    background-color: #233142;
+    color: #e3e3e3;
+    bottom: 0;
+
+}
+
 .unclicked{
     cursor: pointer;
-    color: rgba(0,0,0,0);
+    background-color: #233142;
     border: 1px solid;
 }
+
+.unclicked:hover{
+background-color: #9fd3c7;
+}
+
+.unclicked:active{
+    background-color: #bbe4e9;
+}
+
+.hidden{
+    opacity: 0;
+}
+
+
 .expanded{
-    background-color: gray;
+    background-color: #e3e3e3;
 }
+
+
 table, td {
+    transition: 0.2;
     border: 1px solid;
-  }
+    margin:auto;
+    top: 500px;
+}
+

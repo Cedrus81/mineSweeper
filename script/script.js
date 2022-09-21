@@ -2,6 +2,7 @@ const MINE = 'X'
 const FLAG = 'F'
 var timerId
 var gGame = {
+    hintMode: false,
     seconds: 0,
     markedCount: 0,
     shownCount: 0,
@@ -26,6 +27,7 @@ function initGame(matSize, mineNum) {
 function clickOnMine(elCell) {
     elCell.classList.add('mine')
     if (gGame.firstClick === true) {
+        gLevel.mines--
         normalCell(elCell)
         return
     }
@@ -39,6 +41,9 @@ function clickOnMine(elCell) {
 }
 
 function cellClicked(elCell) {
+    if (gGame.hintMode === true) {
+        hintClicked(elCell)
+    }
     elCell.classList.remove('unclicked')
     if (!gGame.isExpand) {
         if (elCell.innerText === MINE) {
@@ -60,6 +65,7 @@ function cellClicked(elCell) {
 
 // handle a non-flag or bomb Cell
 function normalCell(elCell) {
+
     if (gGame.firstClick === true) {
         startTimer()
     }
@@ -67,6 +73,7 @@ function normalCell(elCell) {
     gGame.firstClick = false
     let i = +elCell.getAttribute("data-i")
     let j = +elCell.getAttribute("data-j")
+    gBoard[i][j].isShown = true
     elCell.innerText = setMinesNegsCount(gBoard, { i, j })
     if (elCell.innerText == 0) {
         expandShown(gBoard, elCell, { i, j })
@@ -102,10 +109,6 @@ function checkGameOver() {
     }
 }
 
-
-function hintMode(img) {
-    img.classList.add('hide')
-}
 
 
 //stop timer, show text, stop score

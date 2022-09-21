@@ -14,6 +14,7 @@ function buildBoard(matSize, mineNum) {
         for (let j = 0; j < matSize; j++) {
             gBoard[i][j] = {}
             gBoard[i][j].isShown = false
+            gBoard[i][j].isMine = false
             if (mines[0] === mineIdx) {
                 gBoard[i][j].isMine = true
                 mines.splice(0, 1)

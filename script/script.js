@@ -1,7 +1,8 @@
 const MINE = 'X'
 const FLAG = 'F'
-
+var timerId
 var gGame = {
+    seconds: 0,
     markedCount: 0,
     shownCount: 0,
     secsPassed: 0,
@@ -17,98 +18,38 @@ function initGame(matSize, mineNum) {
     gLevel.mines = mineNum
     buildBoard(matSize, mineNum)
     renderBoard(gBoard)
-}
 
-// take 
-function buildBoard(matSize, mineNum) {
-    let mines = mineGenerator(matSize, mineNum)
-    let mineIdx = 0
-    gBoard = []
-    console.log(mines)
-    for (let i = 0; i < matSize; i++) {
-        gBoard[i] = []
-        for (let j = 0; j < matSize; j++) {
-            gBoard[i][j] = {}
-            gBoard[i][j].isShown = false
-            if (mines[0] === mineIdx) {
-                gBoard[i][j].isMine = true
-                mines.splice(0, 1)
-            }
-            mineIdx++
-        }
-    }
-}
-
-function mineGenerator(matSize, mineNum) {
-    let mat = []
-    let mines = []
-    for (let i = 0; i < matSize ** 2; i++) {
-        mat[i] = i
-    }
-    for (let j = 0; j < mineNum; j++) {
-        let randIdx = getRandomInt(0, mat.length)
-        let randNum = mat[randIdx]
-        mines.push(randNum)
-        mat.splice(randIdx, 1)
-    }
-    return mines.sort((a, b) => a - b)
 }
 
 
-//count the mines around the cell
-function setMinesNegsCount(board, location) {
-    let mineCount = 0
-    for (let i = location.i - 1; i < location.i + 2; i++) {
-        if (i === -1) continue
-        if (i === board.length) continue
-        for (let j = location.j - 1; j < location.j + 2; j++) {
-            if (location.i === i && location.j === j) continue
-            if (j === -1) continue
-            if (j === board[i].length) continue
-            if (board[i][j].isMine) mineCount++
-        }
-    }
-    return mineCount
-}
 
-function renderBoard(board) {
-    let elTable = document.querySelector('table')
-    let strHTML = '\t<tbody>'
-    for (let i = 0; i < board.length; i++) {
-        strHTML += '\t\n<tr>\n'
-        for (let j = 0; j < board[i].length; j++) {
-            let text = board[i][j].isMine ? MINE : setMinesNegsCount(gBoard, { i, j })
-            strHTML += `\t<td data-i="${i}" data-j="${j}" `
-            strHTML += `onclick="cellClicked(this)" oncontextmenu="cellMarked(this); return false;" `
-            strHTML += `class="unclicked"><span class="hidden">${text}</span></td>\n`
-        }
-        strHTML += '\t\n</tr>\n'
+function clickOnMine(elCell) {
+    elCell.classList.add('mine')
+    if (gGame.firstClick === true) {
+        normalCell(elCell)
+        return
     }
-    strHTML += '\n\t</tbody>'
-    elTable.innerHTML = strHTML
+    gGame.lives--
+    elLives = document.querySelector('#lives')
+    elLives.innerText = `Lives: ${gGame.lives}`
+    console.log(gGame.lives);
+    if (!gGame.lives) {
+        gameOver()
+    }
 }
 
 function cellClicked(elCell) {
     elCell.classList.remove('unclicked')
-    elCell.classList.add('expanded')
     if (!gGame.isExpand) {
-
         if (elCell.innerText === MINE) {
-            if (gGame.firstClick === true) {
-                normalCell(elCell)
-                return
-            }
-            gGame.lives--
-            if (!game.lives) {
-                checkGameOver()
-                return
-            }
+            clickOnMine(elCell)
+            return
         }
 
         if (elCell.innerText === FLAG) {
             let isMine = elCell.getAttribute("isMine")
             if (isMine) {
-                checkGameOver()
+                clickOnMine(elCell)
                 return
             }
         }
@@ -116,8 +57,13 @@ function cellClicked(elCell) {
     normalCell(elCell)
 }
 
+
 // handle a non-flag or bomb Cell
 function normalCell(elCell) {
+    if (gGame.firstClick === true) {
+        startTimer()
+    }
+    elCell.classList.add('expanded')
     gGame.firstClick = false
     let i = +elCell.getAttribute("data-i")
     let j = +elCell.getAttribute("data-j")
@@ -156,24 +102,15 @@ function checkGameOver() {
     }
 }
 
-// //bonus
-function expandShown(board, elCell, location) {
-    gGame.isExpand = true
-    elCell.setAttribute("isExpanded", true)
 
-    for (let i = location.i - 1; i < location.i + 2; i++) {
-        if (i === -1) continue
-        if (i === board.length) continue
-
-        for (let j = location.j - 1; j < location.j + 2; j++) {
-            let newCell = document.querySelector(`td[data-i="${i}"][data-j="${j}"]`)
-            if (j === -1) continue
-            if (j === board[i].length) continue
-            if (!newCell.getAttribute("isExpanded")) {
-                cellClicked(newCell)
-            }
-        }
-    }
-    gGame.isExpand = false
+function hintMode(img) {
+    img.classList.add('hide')
 }
 
+
+//stop timer, show text, stop score
+function gameOver() {
+    checkGameOver()
+    clearInterval(timerId)
+    console.log('gameover');
+}

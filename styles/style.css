@@ -1,10 +1,21 @@
 
 body{
     background-color: #ff9a3c;
+    font-family: 'Allerta Stencil';
+    color: #233142;
+}
+span{
+    right:200px;
 }
 img{
+    cursor: pointer;
     max-width: 20px;
     max-height: 20px;
+}
+
+.header{
+    display: inline;
+    font-size: 22px;
 }
 
 footer{
@@ -17,6 +28,9 @@ footer{
     color: #e3e3e3;
     bottom: 0;
 
+}
+.mine{
+    background-color: #f95959;
 }
 
 .unclicked{
@@ -33,6 +47,10 @@ background-color: #9fd3c7;
     background-color: #bbe4e9;
 }
 
+.hide{
+    display: none;
+}
+/* for text */
 .hidden{
     opacity: 0;
 }
@@ -50,3 +68,6 @@ table, td {
     top: 500px;
 }
 
+.menu{
+    margin-top: 50px;
+}

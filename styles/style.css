@@ -7,7 +7,13 @@ body{
 span{
     right:200px;
 }
+.hints{
+    display:flex;
+    align-items:center;
+}
 img{
+    margin-left: 10px;
+    margin-top: 10px;
     cursor: pointer;
     max-width: 20px;
     max-height: 20px;
@@ -16,6 +22,9 @@ img{
 .header{
     display: inline;
     font-size: 22px;
+}
+.info{
+    margin:10px 10px;
 }
 
 footer{
@@ -70,4 +79,9 @@ table, td {
 
 .menu{
     margin-top: 50px;
+}
+
+
+#timer{
+    align-self: center;
 }

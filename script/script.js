@@ -11,7 +11,8 @@ var gGame = {
     firstClick: true,
     lives: 3,
 }
-var gLevel = {}
+
+var gLevel = { bestScore: 0 }
 var gBoard
 //build board, render board, start timer
 function initGame(matSize, mineNum) {
@@ -26,21 +27,24 @@ function initGame(matSize, mineNum) {
 
 function clickOnMine(elCell) {
     elCell.classList.add('mine')
+    gLevel.mines--
     if (gGame.firstClick === true) {
-        gLevel.mines--
         normalCell(elCell)
         return
     }
     gGame.lives--
     elLives = document.querySelector('#lives')
     elLives.innerText = `Lives: ${gGame.lives}`
-    console.log(gGame.lives);
+    elCell.innerText === MINE
     if (!gGame.lives) {
         gameOver()
     }
 }
 
 function cellClicked(elCell) {
+    //get the DOM
+    let i = +elCell.getAttribute("data-i")
+    let j = +elCell.getAttribute("data-j")
     if (gGame.hintMode === true) {
         if (elCell.classList.contains('.expanded')) return
         hintClicked(elCell)
@@ -49,7 +53,7 @@ function cellClicked(elCell) {
     }
     elCell.classList.remove('unclicked')
     if (!gGame.isExpand) {
-        if (elCell.innerText === MINE) {
+        if (gBoard[i][j].isMine === true) {
             clickOnMine(elCell)
             return
         }
@@ -68,12 +72,11 @@ function cellClicked(elCell) {
 
 // handle a non-flag or bomb Cell
 function normalCell(elCell) {
-
     if (gGame.firstClick === true) {
         startTimer()
+        gGame.firstClick = false
     }
     elCell.classList.add('expanded')
-    gGame.firstClick = false
     let i = +elCell.getAttribute("data-i")
     let j = +elCell.getAttribute("data-j")
     gBoard[i][j].isShown = true
@@ -82,6 +85,7 @@ function normalCell(elCell) {
         expandShown(gBoard, elCell, { i, j })
     }
     gGame.shownCount++
+    updateScore()
 }
 
 //flag
@@ -119,4 +123,12 @@ function gameOver() {
     checkGameOver()
     clearInterval(timerId)
     console.log('gameover');
+}
+
+function updateScore() {
+    document.querySelector('#score').innerText = `Score: ${gGame.shownCount}`
+    if (gGame.shownCount > gLevel.bestScore) {
+        gLevel.bestScore = gGame.shownCount
+        document.querySelector('#best-score').innerText = `Best Score: ${gLevel.bestScore}`
+    }
 }

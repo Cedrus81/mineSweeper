@@ -30,3 +30,15 @@ function hintClicked(elCell) {
     }
 
 }
+
+
+function megaHintMode(button) {
+    let m
+    this.classList.add('hide')
+    console.log('choose 2 locations on the board');
+    let locations = []
+    for (let  = 0;  < 2; ++) {
+
+
+    }
+}

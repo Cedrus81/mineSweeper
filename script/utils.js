@@ -86,9 +86,9 @@ function expandShown(board, elCell, location) {
         if (i === board.length) continue
 
         for (let j = location.j - 1; j < location.j + 2; j++) {
-            let newCell = document.querySelector(`td[data-i="${i}"][data-j="${j}"]`)
             if (j === -1) continue
             if (j === board[i].length) continue
+            let newCell = document.querySelector(`td[data-i="${i}"][data-j="${j}"]`)
             if (!newCell.getAttribute("isExpanded")) {
                 cellClicked(newCell)
             }

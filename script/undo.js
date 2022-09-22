@@ -5,7 +5,7 @@ var gUndo = {
 }
 
 function saveMatrix() {
-    gUndo.board[gUndo.counter] = [...gBoard]
+    gUndo.board[gUndo.counter] = structuredClone(gBoard)
     gUndo.stats[gUndo.counter] = { ...gGame }
     gUndo.counter++
     document.querySelector('#undo').disabled = false
@@ -27,8 +27,6 @@ function undo(elBtn) {
 function renderUndo() {
     for (let i = 0; i < gBoard.length; i++) {
         for (let j = 0; j < gBoard[i].length; j++) {
-            debugger
-            gBoard[i][j] = gUndo.board[gUndo.counter][i][j]
 
             if (gBoard[i][j].isShown) continue
             let elCell = document.querySelector(`td[data-i="${i}"][data-j="${j}"]`)
@@ -41,8 +39,12 @@ function renderUndo() {
             elCell.innerText = ' '
             elCell.classList.remove('expanded')
             elCell.classList.add('unclicked')
+
         }
     }
     document.querySelector('#smiley').innerText = '😃'
     document.querySelector('#lives').innerText = `Lives: ${gGame.lives}`
+    gUndo.board.pop()
+    gUndo.stats.pop()
+
 }

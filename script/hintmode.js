@@ -66,7 +66,6 @@ function megaHintReveal() {
 
     for (let i = from.i; i <= to.i; i++) {
         for (let j = from.j; j <= to.j; j++) {
-            // debugger
             let newCell = document.querySelector(`td[data-i="${i}"][data-j="${j}"]`)
             newCell.classList.add('expanded')
             if (gBoard[i][j].isMine) {

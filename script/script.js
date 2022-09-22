@@ -1,5 +1,5 @@
 const MINE = 'X'
-const FLAG = 'F'
+const FLAG = '🚩'
 var timerId
 var gGame = {
     hintMode: false,
@@ -16,6 +16,7 @@ var gLevel = { bestScore: 0 }
 var gBoard
 //build board, render board, start timer
 function initGame(matSize, mineNum) {
+    reset()
     gLevel.size = matSize
     gLevel.mines = mineNum
     buildBoard(matSize, mineNum)
@@ -35,7 +36,7 @@ function clickOnMine(elCell) {
     gGame.lives--
     elLives = document.querySelector('#lives')
     elLives.innerText = `Lives: ${gGame.lives}`
-    elCell.innerText === MINE
+    elCell.innerText = MINE
     if (!gGame.lives) {
         gameOver()
     }
@@ -57,7 +58,7 @@ function cellClicked(elCell) {
     }
     elCell.classList.remove('unclicked')
     if (!gGame.isExpand) {
-        if (gBoard[i][j].isMine === true) {
+        if (gBoard[i][j].isMine) {
             clickOnMine(elCell)
             return
         }
@@ -111,9 +112,8 @@ function cellMarked(elCell) {
 function checkGameOver() {
     let unclicked = document.querySelectorAll(".unclicked")
     let hidden = document.querySelectorAll(".hidden")
-    for (let cell of unclicked) {
-        cell.classList.remove('unclicked')
-        cell.classList.add('expanded')
+    for (let elCell of unclicked) {
+        cellClicked(elCell)
     }
     for (let span of hidden) {
         span.classList.remove('hidden')
@@ -122,6 +122,14 @@ function checkGameOver() {
 
 
 
+function updateScore() {
+    document.querySelector('#score').innerText = `Score: ${gGame.shownCount}`
+    if (gGame.shownCount > gLevel.bestScore) {
+        gLevel.bestScore = gGame.shownCount
+        document.querySelector('#best-score').innerText = `Best Score: ${gLevel.bestScore}`
+    }
+}
+
 //stop timer, show text, stop score
 function gameOver() {
     checkGameOver()
@@ -129,10 +137,16 @@ function gameOver() {
     console.log('gameover');
 }
 
-function updateScore() {
-    document.querySelector('#score').innerText = `Score: ${gGame.shownCount}`
-    if (gGame.shownCount > gLevel.bestScore) {
-        gLevel.bestScore = gGame.shownCount
-        document.querySelector('#best-score').innerText = `Best Score: ${gLevel.bestScore}`
-    }
+function reset() {
+    // reset game stats
+    gGame.firstClick = true
+    gGame.markedCount = 0
+    gGame.hintMode = false
+    gGame.isExpand = false
+    gGame.shownCount = 0
+    gGame.secsPassed = 0
+    gGame.seconds = 0
+    gGame.lives = 3
+
+    gMegaHint.locations = []
 }

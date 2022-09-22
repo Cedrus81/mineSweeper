@@ -31,6 +31,7 @@ function hintClicked(elCell) {
             setTimeout(() => {
                 newCell.classList.remove('expanded')
                 newCell.innerText = ' '
+                if (gBoard[i][j].isMarked) newCell.innerText = FLAG
             }, 1000)
         }
 
@@ -79,9 +80,9 @@ function megaHintReveal() {
                 newCell.innerText = setMinesNegsCount(gBoard, { i, j })
             }
             setTimeout(() => {
-                // debugger
                 newCell.classList.remove('expanded')
                 newCell.innerText = ' '
+                if (gBoard[i][j].isMarked) newCell.innerText = FLAG
             }, 1000)
         }
     }

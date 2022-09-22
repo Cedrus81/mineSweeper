@@ -64,8 +64,9 @@ function renderBoard(board) {
         strHTML += '\t\n<tr>\n'
         for (let j = 0; j < board[i].length; j++) {
             let text = board[i][j].isMine ? MINE : setMinesNegsCount(gBoard, { i, j })
+            let func = manualMode.isOn ? "plantBomb(this)" : "cellClicked(this)"
             strHTML += `\t<td data-i="${i}" data-j="${j}" `
-            strHTML += `onclick="cellClicked(this)" oncontextmenu="cellMarked(this); return false;" `
+            strHTML += `onclick=${func} oncontextmenu="cellMarked(this); return false;" `
             strHTML += `class="unclicked"><span class="hidden">${text}</span></td>\n`
         }
         strHTML += '\t\n</tr>\n'

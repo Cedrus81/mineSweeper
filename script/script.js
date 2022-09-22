@@ -119,7 +119,6 @@ function cellMarked(elCell) {
 
     //MODEL
     elCell.innerText = FLAG
-    elCell.classList.remove('unclicked')
 }
 
 function checkGameOver() {

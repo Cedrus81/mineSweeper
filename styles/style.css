@@ -95,3 +95,7 @@ td{
 .safeclick{
     background: linear-gradient(to right, rgb(182, 244, 146), rgb(51, 139, 147));
 }
+.planted{
+    color:#e3e3e3;
+    transition: 0.5s;
+}

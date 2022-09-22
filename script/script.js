@@ -10,6 +10,7 @@ var gGame = {
     isExpand: false,
     firstClick: true,
     lives: 3,
+    safeclicks: 3,
 }
 
 var gLevel = { bestScore: 0 }
@@ -27,6 +28,7 @@ function initGame(matSize, mineNum) {
 
 
 function clickOnMine(elCell) {
+    elCell.classList.remove('unclicked')
     elCell.classList.add('mine')
     gLevel.mines--
     if (gGame.firstClick === true) {
@@ -46,6 +48,10 @@ function cellClicked(elCell) {
     //get the DOM
     let i = +elCell.getAttribute("data-i")
     let j = +elCell.getAttribute("data-j")
+    // debugger
+    if (gBoard[i][j].isShown) {
+        return
+    }
     if (gMegaHint.isOn) {
         megaHint(i, j)
         return
@@ -56,9 +62,9 @@ function cellClicked(elCell) {
         gGame.hintMode = false
         return
     }
-    elCell.classList.remove('unclicked')
     if (!gGame.isExpand) {
         if (gBoard[i][j].isMine) {
+            gBoard.isShown = true
             clickOnMine(elCell)
             return
         }
@@ -81,6 +87,11 @@ function normalCell(elCell) {
         startTimer()
         gGame.firstClick = false
     }
+    if (elCell.classList.contains('unclicked')) {
+        elCell.classList.remove('unclicked')
+        gGame.shownCount++
+        updateScore()
+    }
     elCell.classList.add('expanded')
     let i = +elCell.getAttribute("data-i")
     let j = +elCell.getAttribute("data-j")
@@ -89,8 +100,6 @@ function normalCell(elCell) {
     if (elCell.innerText == 0) {
         expandShown(gBoard, elCell, { i, j })
     }
-    gGame.shownCount++
-    updateScore()
 }
 
 //flag
@@ -143,10 +152,10 @@ function reset() {
     gGame.markedCount = 0
     gGame.hintMode = false
     gGame.isExpand = false
+    gGame.safeclicks = 3
     gGame.shownCount = 0
     gGame.secsPassed = 0
     gGame.seconds = 0
     gGame.lives = 3
 
-    gMegaHint.locations = []
 }

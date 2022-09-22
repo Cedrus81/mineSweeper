@@ -1,3 +1,4 @@
+var safeclicks = 3
 var gMegaHint = {
     isOn: false,
     locations: [],
@@ -39,8 +40,8 @@ function hintClicked(elCell) {
 
 function megaHintMode(button) {
     gMegaHint.isOn = true
-    button.classList.add('hide')
     console.log('choose 2 locations on the board');
+    button.disabled = true
 }
 
 function megaHint(i, j) {
@@ -49,6 +50,7 @@ function megaHint(i, j) {
     }
     if (gMegaHint.locations.length === 2) {
         megaHintReveal()
+        // gMegaHint.locations.splice(0)
     }
 }
 
@@ -75,10 +77,39 @@ function megaHintReveal() {
                 newCell.innerText = setMinesNegsCount(gBoard, { i, j })
             }
             setTimeout(() => {
+                // debugger
                 newCell.classList.remove('expanded')
                 newCell.innerText = ' '
             }, 1000)
         }
     }
     gMegaHint.isOn = false
+}
+
+
+function safeCell(elBtn) {
+    gGame.safeclicks--
+    let elCell = getSafeCell()
+    elCell.classList.add('safeclick')
+    elBtn.innerText = `Safe Clicks: ${gGame.safeclicks}`
+    if (!gGame.safeclicks) {
+        elBtn.disabled = true
+    }
+    setTimeout(() => elCell.classList.remove('safeclick'), 2000)
+}
+
+function getSafeCell() {
+
+    let idx = 0
+    let randIdx = getRandomInt(0, gLevel.size ** 2 - gLevel.mines - gGame.shownCount)       // the X'th cell which isnt a mine
+    for (let i = 0; i < gBoard.length; i++) {
+        for (let j = 0; j < gBoard[i].length; j++) {
+            if (gBoard[i][j].isShown) continue
+            if (gBoard[i][j].isMine) continue
+            if (idx === randIdx) {
+                return document.querySelector(`td[data-i="${i}"][data-j="${j}"]`)
+            }
+            idx++
+        }
+    }
 }

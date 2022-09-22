@@ -71,10 +71,16 @@ background-color: #9fd3c7;
 
 
 table, td {
+    user-select: none;
     transition: 0.2;
     border: 1px solid;
     margin:auto;
     top: 500px;
+    text-align: center;
+}
+td{
+    height: 1em;
+    width: 1em;
 }
 
 .menu{
@@ -84,4 +90,8 @@ table, td {
 
 #timer{
     align-self: center;
+}
+
+.safeclick{
+    background: linear-gradient(to right, rgb(182, 244, 146), rgb(51, 139, 147));
 }

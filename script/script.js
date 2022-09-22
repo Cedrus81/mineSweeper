@@ -12,6 +12,7 @@ var gGame = {
     firstClick: true,
     lives: 3,
     safeclicks: 3,
+    isVictory: false
 }
 
 var gLevel = { bestScore: 0 }
@@ -28,24 +29,6 @@ function initGame(matSize, mineNum) {
 }
 
 
-
-function clickOnMine(elCell) {
-    elCell.classList.remove('unclicked')
-    elCell.classList.add('mine')
-    if (gGame.isOn) {
-        gGame.lives--
-    }
-    if (gGame.firstClick === true) {
-        normalCell(elCell)
-        return
-    }
-    elLives = document.querySelector('#lives')
-    elLives.innerText = `Lives: ${gGame.lives}`
-    elCell.innerText = MINE
-    if (!gGame.lives) {
-        gameOver()
-    }
-}
 
 function cellClicked(elCell) {
     //get the DOM
@@ -83,6 +66,25 @@ function cellClicked(elCell) {
 }
 
 
+function clickOnMine(elCell) {
+    elCell.classList.remove('unclicked')
+    let color = gGame.isVictory ? 'mine-victory' : 'mine'
+    elCell.classList.add(color)
+    if (gGame.isOn) {
+        gGame.lives--
+    }
+    if (gGame.firstClick === true) {
+        normalCell(elCell)
+        return
+    }
+    elLives = document.querySelector('#lives')
+    elLives.innerText = `Lives: ${gGame.lives}`
+    elCell.innerText = MINE
+    if (!gGame.lives) {
+        gameOver()
+    }
+}
+
 // handle a non-flag or bomb Cell
 function normalCell(elCell) {
     if (gGame.firstClick === true) {
@@ -93,7 +95,7 @@ function normalCell(elCell) {
         elCell.classList.remove('unclicked')
         if (gGame.isOn) {
             gGame.shownCount++
-            updateScore()
+            checkScore()
         }
     }
     elCell.classList.add('expanded')
@@ -108,17 +110,19 @@ function normalCell(elCell) {
 
 //flag
 function cellMarked(elCell) {
-    if (elCell.innerText === FLAG) return
-    gGame.markedCount++
-    if (elCell.innerText === MINE) elCell.setAttribute("isMine", true)
-
-    //DOM
     let i = +elCell.getAttribute("data-i")
     let j = +elCell.getAttribute("data-j")
+    if (gBoard[i][j].isShown || gBoard[i][j].isMarked) {
+        return
+    }
+    gGame.markedCount++
+
+    //DOM
     gBoard[i][j].isMarked = true
 
     //MODEL
     elCell.innerText = FLAG
+    checkScore()
 }
 
 function checkGameOver() {
@@ -134,11 +138,14 @@ function checkGameOver() {
 
 
 
-function updateScore() {
+function checkScore() {
     document.querySelector('#score').innerText = `Score: ${gGame.shownCount}`
     if (gGame.shownCount > gLevel.bestScore) {
         gLevel.bestScore = gGame.shownCount
         document.querySelector('#best-score').innerText = `Best Score: ${gLevel.bestScore}`
+    }
+    if (gGame.shownCount + gGame.markedCount === gLevel.size ** 2) {
+        victory()
     }
 }
 
@@ -150,9 +157,18 @@ function gameOver() {
     console.log('gameover');
 }
 
+function victory() {
+    gGame.isOn = false
+    gGame.isVictory = true
+    checkGameOver()
+    clearInterval(timerId)
+}
+
+
 function reset() {
     // reset game stats
     gGame.firstClick = true
+    gGame.isVictory = false
     gGame.markedCount = 0
     gGame.hintMode = false
     gGame.isExpand = false

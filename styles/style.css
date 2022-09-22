@@ -42,6 +42,10 @@ footer{
     background-color: #f95959;
 }
 
+.mine-victory{
+    background-color: #a2c11c;
+}
+
 .unclicked{
     cursor: pointer;
     background-color: #233142;

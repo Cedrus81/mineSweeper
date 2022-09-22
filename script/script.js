@@ -45,7 +45,11 @@ function cellClicked(elCell) {
     //get the DOM
     let i = +elCell.getAttribute("data-i")
     let j = +elCell.getAttribute("data-j")
-    if (gGame.hintMode === true) {
+    if (gMegaHint.isOn) {
+        megaHint(i, j)
+        return
+    }
+    if (gGame.hintMode) {
         if (elCell.classList.contains('.expanded')) return
         hintClicked(elCell)
         gGame.hintMode = false

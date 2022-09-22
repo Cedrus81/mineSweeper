@@ -112,7 +112,13 @@ function normalCell(elCell) {
 function cellMarked(elCell) {
     let i = +elCell.getAttribute("data-i")
     let j = +elCell.getAttribute("data-j")
-    if (gBoard[i][j].isShown || gBoard[i][j].isMarked) {
+    if (gBoard[i][j].isShown) {
+        return
+    }
+    if (gBoard[i][j].isMarked) {
+        gBoard[i][j].isMarked = false
+        elCell.innerText = ' '
+        gGame.markedCount--
         return
     }
     gGame.markedCount++
@@ -151,13 +157,15 @@ function checkScore() {
 
 //stop timer, show text, stop score
 function gameOver() {
+    document.querySelector('#smiley').innerText = '🤯'
     gGame.isOn = false
     checkGameOver()
     clearInterval(timerId)
-    console.log('gameover');
+
 }
 
 function victory() {
+    document.querySelector('#smiley').innerText = '😁'
     gGame.isOn = false
     gGame.isVictory = true
     checkGameOver()
@@ -178,5 +186,5 @@ function reset() {
     gGame.isOn = true
     gGame.seconds = 0
     gGame.lives = 3
-
+    document.querySelector('#smiley').innerText = '😃'
 }

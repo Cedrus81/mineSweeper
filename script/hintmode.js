@@ -5,9 +5,10 @@ var gMegaHint = {
 }
 
 
-function hintMode(img) {
+function hintMode(elHint) {
     gGame.hintMode = true
-    img.classList.add('hide')
+    elHint.classList.remove('hint')
+    elHint.classList.add('hint-used')
 }
 
 function hintClicked(elCell) {

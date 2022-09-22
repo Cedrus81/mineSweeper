@@ -12,9 +12,9 @@
 
 <body onload="initGame(8, 14)">
     <div class="header">
-
         <span class="info" id="lives">Lives: 3</span>
         <span class="info" id="timer">Time: 0</span>
+        <span class="info" id="smiley">'😃'</span>
         <span class="info" id="score">Score: 0</span>
         <span class="info" id="best-score">Best Score: 0</span>
     </div>
@@ -22,9 +22,7 @@
     <table cellpadding="10"></table>
 
     <div class="hints">
-        <img onclick="hintMode(this)" src="images/hint.png" alt="" srcset="">
-        <img onclick="hintMode(this)" src="images/hint.png" alt="" srcset="">
-        <img onclick="hintMode(this)" src="images/hint.png" alt="" srcset="">
+
     </div>
 
     <table class="menu">
@@ -40,8 +38,16 @@
             <tr>
                 <td><button onclick="megaHintMode(this)">Mega Hint</button></td>
                 <td><button onclick="safeCell(this)">Safe Clicks: 3</button></td>
+                <td><span class="hint" onclick="hintMode(this)">💡</span>
+                    <span class="hint" onclick="hintMode(this)">💡</span>
+                    <span class="hint" onclick="hintMode(this)">💡</span>
+                </td>
             </tr>
-            <tr><button onclick="ManualMode()">Manual Mode!</button></tr>
+            <tr>
+                <td>
+                    <button onclick="ManualMode()">Manual Mode!</button>
+                </td>
+            </tr>
         </tbody>
     </table>
 

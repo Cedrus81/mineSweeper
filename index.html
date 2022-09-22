@@ -14,7 +14,7 @@
     <div class="header">
         <span class="info" id="lives">Lives: 3</span>
         <span class="info" id="timer">Time: 0</span>
-        <span class="info" id="smiley">'😃'</span>
+        <span class="info" id="smiley" onclick="initGame(gLevel.size, gLevel.mines)">'😃'</span>
         <span class="info" id="score">Score: 0</span>
         <span class="info" id="best-score">Best Score: 0</span>
     </div>
@@ -47,6 +47,7 @@
                 <td>
                     <button onclick="ManualMode()">Manual Mode!</button>
                 </td>
+                <td><button onclick="undo(this)" disabled id="undo">Undo</button></td>
             </tr>
         </tbody>
     </table>
@@ -56,6 +57,7 @@
     <script src="script/utils.js"></script>
     <script src="script/hintmode.js"></script>
     <script src="script/manualmode.js"></script>
+    <script src="script/undo.js"></script>
 </body>
 
 </html>

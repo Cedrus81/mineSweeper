@@ -48,6 +48,7 @@ function cellClicked(elCell) {
         return
     }
     if (!gGame.isExpand) {
+        saveMatrix()
         if (gBoard[i][j].isMine) {
             gBoard[i][j].isShown = true
             clickOnMine(elCell)
@@ -102,6 +103,9 @@ function normalCell(elCell) {
     let i = +elCell.getAttribute("data-i")
     let j = +elCell.getAttribute("data-j")
     gBoard[i][j].isShown = true
+    if (gBoard[i][j].isMine) gBoard[i][j].isMine = false
+    if (gBoard[i][j].isMarked) gBoard[i][j].isMarked = false
+
     elCell.innerText = setMinesNegsCount(gBoard, { i, j })
     if (elCell.innerText == 0) {
         expandShown(gBoard, elCell, { i, j })
@@ -186,5 +190,17 @@ function reset() {
     gGame.isOn = true
     gGame.seconds = 0
     gGame.lives = 3
+
+    gUndo.board = []
+    gUndo.stats = []
+    gUndo.counter = 0
+
+    manualMode.isOn = false
     document.querySelector('#smiley').innerText = '😃'
+    document.querySelector('#timer').innerText = 'Time: 0'
+    document.querySelector('#lives').innerText = 'Lives: 3'
+    let hints = document.querySelectorAll('.hint-used')
+    for (hint of hints) {
+        hint.classList.remove('hint-used')
+    }
 }

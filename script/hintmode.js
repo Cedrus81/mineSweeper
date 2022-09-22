@@ -6,6 +6,10 @@ var gMegaHint = {
 
 
 function hintMode(elHint) {
+    if (gGame.hintMode) {
+        return
+    }
+
     gGame.hintMode = true
     elHint.classList.remove('hint')
     elHint.classList.add('hint-used')
@@ -53,7 +57,6 @@ function megaHint(i, j) {
     }
     if (gMegaHint.locations.length === 2) {
         megaHintReveal()
-        // gMegaHint.locations.splice(0)
     }
 }
 

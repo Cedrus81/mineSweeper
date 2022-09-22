@@ -15,6 +15,10 @@ function undo(elBtn) {
     gUndo.counter--
     if (gUndo.counter === 0) elBtn.disabled = true
     //model
+    // attributes I want to keep:
+    gUndo.stats[gUndo.counter].seconds = gGame.seconds
+    gUndo.stats[gUndo.counter].firstClick = gGame.firstClick
+
     gBoard = gUndo.board[gUndo.counter]
     gGame = gUndo.stats[gUndo.counter]
     //DOM
@@ -22,8 +26,6 @@ function undo(elBtn) {
 }
 
 //renderBack runs over the new (old) gBoard, what is not shown is now unclicked and not expanded
-// what is not marked is now unmarked
-// what was a mine now loses it's class
 function renderUndo() {
     for (let i = 0; i < gBoard.length; i++) {
         for (let j = 0; j < gBoard[i].length; j++) {
@@ -37,6 +39,7 @@ function renderUndo() {
                 elCell.innerText = FLAG
             }
             elCell.innerText = ' '
+            elCell.setAttribute("isExpanded", false)
             elCell.classList.remove('expanded')
             elCell.classList.add('unclicked')
 

@@ -7,7 +7,6 @@ var gGame = {
     seconds: 0,
     markedCount: 0,
     shownCount: 0,
-    secsPassed: 0,
     isExpand: false,
     firstClick: true,
     lives: 3,
@@ -64,6 +63,8 @@ function cellClicked(elCell) {
         }
     }
     normalCell(elCell)
+
+
 }
 
 
@@ -88,7 +89,7 @@ function clickOnMine(elCell) {
 
 // handle a non-flag or bomb Cell
 function normalCell(elCell) {
-    if (gGame.firstClick === true) {
+    if (gGame.firstClick) {
         startTimer()
         gGame.firstClick = false
     }
@@ -103,12 +104,14 @@ function normalCell(elCell) {
     let i = +elCell.getAttribute("data-i")
     let j = +elCell.getAttribute("data-j")
     gBoard[i][j].isShown = true
-    if (gBoard[i][j].isMine) gBoard[i][j].isMine = false
+    if (gBoard[i][j].isMine) gBoard[i][j].isMine = false  // helps in case of megahint
     if (gBoard[i][j].isMarked) gBoard[i][j].isMarked = false
 
     elCell.innerText = setMinesNegsCount(gBoard, { i, j })
-    if (elCell.innerText == 0) {
+    debugger
+    if (elCell.innerText == 0) { //on purpose 2 and not 3 '='s
         expandShown(gBoard, elCell, { i, j })
+
     }
 }
 
@@ -135,17 +138,6 @@ function cellMarked(elCell) {
     checkScore()
 }
 
-function checkGameOver() {
-    let unclicked = document.querySelectorAll(".unclicked")
-    let hidden = document.querySelectorAll(".hidden")
-    for (let elCell of unclicked) {
-        cellClicked(elCell)
-    }
-    for (let span of hidden) {
-        span.classList.remove('hidden')
-    }
-}
-
 
 
 function checkScore() {
@@ -164,7 +156,6 @@ function gameOver() {
     document.querySelector('#smiley').innerText = '🤯'
     gGame.isOn = false
     checkGameOver()
-    clearInterval(timerId)
 
 }
 
@@ -173,12 +164,25 @@ function victory() {
     gGame.isOn = false
     gGame.isVictory = true
     checkGameOver()
+}
+
+function checkGameOver() {
     clearInterval(timerId)
+    document.querySelector('#undo').disabled = true
+    let unclicked = document.querySelectorAll(".unclicked")
+    let hidden = document.querySelectorAll(".hidden")
+    for (let elCell of unclicked) {
+        cellClicked(elCell)
+    }
+    for (let span of hidden) {
+        span.classList.remove('hidden')
+    }
 }
 
 
 function reset() {
     // reset game stats
+    clearInterval(timerId)
     gGame.firstClick = true
     gGame.isVictory = false
     gGame.markedCount = 0
@@ -186,19 +190,24 @@ function reset() {
     gGame.isExpand = false
     gGame.safeclicks = 3
     gGame.shownCount = 0
-    gGame.secsPassed = 0
     gGame.isOn = true
     gGame.seconds = 0
     gGame.lives = 3
 
-    gUndo.board = []
-    gUndo.stats = []
+    gUndo.board.splice(0)
+    gUndo.stats.splice(0)
     gUndo.counter = 0
 
-    manualMode.isOn = false
+    gMegaHint.locations.splice(0)
+    manualMode = {}
     document.querySelector('#smiley').innerText = '😃'
     document.querySelector('#timer').innerText = 'Time: 0'
     document.querySelector('#lives').innerText = 'Lives: 3'
+    let elBtns = document.querySelectorAll(':disabled')
+    for (btn of elBtns) {
+        btn.disabled = false
+    }
+    document.querySelector('#undo').disabled = true
     let hints = document.querySelectorAll('.hint-used')
     for (hint of hints) {
         hint.classList.remove('hint-used')

@@ -19,6 +19,7 @@ function hintClicked(elCell) {
         for (let j = cellJ - 1; j < cellJ + 2; j++) {
             if (j === - 1) continue
             if (j === gBoard.length) continue
+            if (gBoard[i][j].isShown) continue
             let newCell = document.querySelector(`td[data-i="${i}"][data-j="${j}"]`)
             newCell.classList.add('expanded')
             if (gBoard[i][j].isMine) {
@@ -68,6 +69,7 @@ function megaHintReveal() {
 
     for (let i = from.i; i <= to.i; i++) {
         for (let j = from.j; j <= to.j; j++) {
+            if (gBoard[i][j].isShown) continue
             let newCell = document.querySelector(`td[data-i="${i}"][data-j="${j}"]`)
             newCell.classList.add('expanded')
             if (gBoard[i][j].isMine) {

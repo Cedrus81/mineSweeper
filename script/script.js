@@ -2,6 +2,7 @@ const MINE = 'X'
 const FLAG = '🚩'
 var timerId
 var gGame = {
+    isOn: true,
     hintMode: false,
     seconds: 0,
     markedCount: 0,
@@ -18,6 +19,7 @@ var gBoard
 //build board, render board, start timer
 function initGame(matSize, mineNum) {
     reset()
+    gGame.isOn = true
     gLevel.size = matSize
     gLevel.mines = mineNum
     buildBoard(matSize, mineNum)
@@ -30,12 +32,13 @@ function initGame(matSize, mineNum) {
 function clickOnMine(elCell) {
     elCell.classList.remove('unclicked')
     elCell.classList.add('mine')
-    gLevel.mines--
+    if (gGame.isOn) {
+        gGame.lives--
+    }
     if (gGame.firstClick === true) {
         normalCell(elCell)
         return
     }
-    gGame.lives--
     elLives = document.querySelector('#lives')
     elLives.innerText = `Lives: ${gGame.lives}`
     elCell.innerText = MINE
@@ -48,7 +51,6 @@ function cellClicked(elCell) {
     //get the DOM
     let i = +elCell.getAttribute("data-i")
     let j = +elCell.getAttribute("data-j")
-    // debugger
     if (gBoard[i][j].isShown) {
         return
     }
@@ -64,7 +66,7 @@ function cellClicked(elCell) {
     }
     if (!gGame.isExpand) {
         if (gBoard[i][j].isMine) {
-            gBoard.isShown = true
+            gBoard[i][j].isShown = true
             clickOnMine(elCell)
             return
         }
@@ -89,8 +91,10 @@ function normalCell(elCell) {
     }
     if (elCell.classList.contains('unclicked')) {
         elCell.classList.remove('unclicked')
-        gGame.shownCount++
-        updateScore()
+        if (gGame.isOn) {
+            gGame.shownCount++
+            updateScore()
+        }
     }
     elCell.classList.add('expanded')
     let i = +elCell.getAttribute("data-i")
@@ -141,6 +145,7 @@ function updateScore() {
 
 //stop timer, show text, stop score
 function gameOver() {
+    gGame.isOn = false
     checkGameOver()
     clearInterval(timerId)
     console.log('gameover');
@@ -155,6 +160,7 @@ function reset() {
     gGame.safeclicks = 3
     gGame.shownCount = 0
     gGame.secsPassed = 0
+    gGame.isOn = true
     gGame.seconds = 0
     gGame.lives = 3
 

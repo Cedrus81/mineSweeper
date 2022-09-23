@@ -182,7 +182,6 @@ function checkGameOver() {
 
 
 function reset() {
-    // reset game stats
     clearInterval(timerId)
     resetStats()
     renderStats()

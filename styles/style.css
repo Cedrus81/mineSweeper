@@ -81,7 +81,9 @@ background-color: #9fd3c7;
 .expanded{
     background-color: #e3e3e3;
 }
-
+.firstClick{
+    background-color: #ff9a3c;
+}
 
 table, td {
     user-select: none;

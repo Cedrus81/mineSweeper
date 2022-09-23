@@ -2,11 +2,11 @@ const MINE = 'X'
 const FLAG = '🚩'
 var timerId
 var gGame = {
+    firstClick: true,
     isOn: true,
     seconds: 0,
     markedCount: 0,
     shownCount: 0,
-    firstExpand: false,
     recursiveCounter: 0,
     lives: 3,
     safeclicks: 3,
@@ -48,10 +48,10 @@ function cellClicked(elCell) {
         gHints.hint.isOn = false
         return
     }
-    if (!gUndo.recursiveCounter) saveMatrix()
 
-    if (!gGame.recursiveCounter && gGame.isOn) {
 
+    if (!gGame.recursiveCounter) {
+        if (gGame.isOn) saveMatrix()
         if (gBoard[i][j].isMine) {
             gBoard[i][j].isShown = true
             clickOnMine(elCell)
@@ -65,15 +65,15 @@ function cellClicked(elCell) {
 
 
 function clickOnMine(elCell) {
-    if (gGame.firstClick === true) {
-        normalCell(elCell)
-        return
-    }
     elCell.classList.remove('unclicked')
     let color = gGame.isVictory ? 'mine-victory' : 'mine'
+    if (gGame.firstClick) {
+        gGame.markedCount++
+        color = 'firstClick'
+    }
     elCell.classList.add(color)
     elCell.innerText = MINE
-    if (gGame.isOn) {
+    if (gGame.isOn && !gGame.firstClick) {
         gGame.lives--
         elLives = document.querySelector('#lives')
         elLives.innerText = `Lives: ${gGame.lives}`
@@ -81,17 +81,17 @@ function clickOnMine(elCell) {
             gameOver()
         }
     }
+    if (gGame.firstClick) {
+        startTimer()
+        gGame.firstClick = false
+    }
 }
 
 // handle a non-flag or bomb Cell
 function normalCell(elCell) {
     let i = +elCell.getAttribute("data-i")
     let j = +elCell.getAttribute("data-j")
-    if (gBoard[i][j].isMine && !gGame.firstClick) {
-        // a scenario that only happens with first click and checkGameOver()
-        clickOnMine(elCell)
-        return
-    }
+
     if (elCell.classList.contains('unclicked')) {
         elCell.classList.remove('unclicked')
         if (gGame.isOn) {
@@ -104,17 +104,14 @@ function normalCell(elCell) {
     if (gBoard[i][j].isMarked) gBoard[i][j].isMarked = false
     elCell.innerText = setMinesNegsCount(gBoard, { i, j })
     if (elCell.innerText == 0) { //on purpose 2 and not 3 '='s
-        gUndo.recursiveCounter++
-        console.log(gUndo.recursiveCounter);
+        gGame.recursiveCounter++
         expandShown(gBoard, elCell, { i, j })
-        gUndo.recursiveCounter--
-        console.log(gUndo.recursiveCounter);
+        gGame.recursiveCounter--
     }
     if (gGame.firstClick) {
         startTimer()
         gGame.firstClick = false
     }
-
 }
 
 
@@ -148,7 +145,7 @@ function checkScore() {
         gLevel.bestScore = gGame.shownCount
         document.querySelector('#best-score').innerText = `Best Score: ${gLevel.bestScore}`
     }
-    if (gGame.shownCount + gGame.markedCount === gLevel.size ** 2) {
+    if (gGame.shownCount + gGame.markedCount + (3 - gGame.lives) === gLevel.size ** 2) {
         victory()
     }
 }
@@ -172,7 +169,7 @@ function checkGameOver() {
     clearInterval(timerId)
     disableAllBtns()
     disableHints()
-
+    resetUndo()
     let unclicked = document.querySelectorAll(".unclicked")
     let hidden = document.querySelectorAll(".hidden")
     for (let elCell of unclicked) {
@@ -199,6 +196,7 @@ function resetStats() {
     gGame.isVictory = false
     gGame.markedCount = 0
     gGame.recursiveCounter = 0
+    gGame.firstClick = true
     gGame.safeclicks = 3
     gGame.shownCount = 0
     gGame.isOn = true

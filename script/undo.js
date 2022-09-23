@@ -37,10 +37,11 @@ function renderUndo() {
             }
             if (gBoard[i][j].isMarked) {
                 elCell.innerText = FLAG
+                continue
             }
             elCell.innerText = ' '
             elCell.setAttribute("isExpanded", false)
-            elCell.classList.remove('expanded')
+            elCell.classList.remove('expanded', 'firstClick')
             elCell.classList.add('unclicked')
 
         }

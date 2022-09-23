@@ -64,7 +64,7 @@ function renderBoard(board) {
         strHTML += '\t\n<tr>\n'
         for (let j = 0; j < board[i].length; j++) {
             let text = board[i][j].isMine ? MINE : setMinesNegsCount(gBoard, { i, j })
-            let func = manualMode.isOn ? "plantBomb(this)" : "cellClicked(this)"
+            let func = gManualMode.isOn ? "plantBomb(this)" : "cellClicked(this)"
             strHTML += `\t<td data-i="${i}" data-j="${j}" `
             strHTML += `onclick=${func} oncontextmenu="cellMarked(this); return false;" `
             strHTML += `class="unclicked"><span class="hidden">${text}</span></td>\n`
@@ -79,7 +79,6 @@ function renderBoard(board) {
 
 // //bonus
 function expandShown(board, elCell, location) {
-    gGame.isExpand = true
     elCell.setAttribute("isExpanded", true)
 
     for (let i = location.i - 1; i < location.i + 2; i++) {
@@ -95,7 +94,6 @@ function expandShown(board, elCell, location) {
             }
         }
     }
-    gGame.isExpand = false
 }
 
 
@@ -105,4 +103,30 @@ function startTimer() {
         elTimer = document.querySelector('#timer')
         elTimer.innerHTML = `Time: ${gGame.seconds}`
     }, 1000)
+}
+
+
+function disableAllBtns() {
+    let elBtns = document.querySelectorAll('button')
+    for (const btn of elBtns) {
+        btn.disabled = true
+    }
+}
+
+function enableAllBtns() {
+    let elBtns = document.querySelectorAll(':disabled')
+    for (btn of elBtns) {
+        if (btn.id === 'undo') continue
+        btn.disabled = false
+    }
+}
+
+
+
+function renderStats() {
+    document.querySelector('#smiley').innerText = '😃'
+    document.querySelector('#timer').innerText = `Time: ${gGame.seconds}`
+    document.querySelector('#lives').innerText = `Lives: ${gGame.lives}`
+    document.querySelector('#score').innerText = `Score: ${gGame.shownCount}`
+    document.querySelector('#safeClick').innerText = `Safe Clicks: ${gGame.safeclicks}`
 }

@@ -1,7 +1,7 @@
 var gUndo = {
     board: [],
     stats: [],
-    counter: 0
+    counter: 0,
 }
 
 function saveMatrix() {
@@ -45,9 +45,19 @@ function renderUndo() {
 
         }
     }
+    document.querySelector('#score').innerText = `Score: ${gGame.shownCount}`
     document.querySelector('#smiley').innerText = '😃'
     document.querySelector('#lives').innerText = `Lives: ${gGame.lives}`
     gUndo.board.pop()
     gUndo.stats.pop()
+
+}
+
+
+function resetUndo() {
+    document.querySelector('#undo').disabled = true
+    gUndo.board.splice(0)
+    gUndo.stats.splice(0)
+    gUndo.counter = 0
 
 }

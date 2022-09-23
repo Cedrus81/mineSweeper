@@ -1,23 +1,19 @@
 
-var manualMode = {}
+var gManualMode = {}
 
-function ManualMode() {
-    reset()
-    manualMode.isOn = true
-    manualMode.mines = gLevel.mines
-    ManualBuildBoard(gLevel.size)
+function manualMode() {
+    gManualMode.isOn = true
+    gManualMode.mines = gLevel.mines
+    manualBuildBoard(gLevel.size)
     renderBoard(gBoard)
     // disable all buttons while planting:
-    elBtns = document.querySelectorAll('button')
-    for (let button of elBtns) {
-        button.disabled = true
-    }
+    disableAllBtns()
     console.log('Manual mode!!');
 }
 
 
 
-function ManualBuildBoard(matSize) {
+function manualBuildBoard(matSize) {
     gBoard = []
     for (let i = 0; i < matSize; i++) {
         gBoard[i] = []
@@ -30,19 +26,15 @@ function ManualBuildBoard(matSize) {
 }
 
 function plantBomb(elCell) {
-    console.log('mines left:', manualMode.mines);
-    if (manualMode.mines === 0) {
-        elBtns = document.querySelectorAll('button')
-        for (let button of elBtns) {
-            button.disabled = false
-        }
+    console.log('mines left:', gManualMode.mines);
+    if (gManualMode.isOn === false) {
         cellClicked(elCell)
         return
     }
     let i = +elCell.getAttribute("data-i")
     let j = +elCell.getAttribute("data-j")
     if (gBoard[i][j].isMine) return
-    manualMode.mines--
+    gManualMode.mines--
     //model
     gBoard[i][j].isMine = true
 
@@ -57,4 +49,15 @@ function plantBomb(elCell) {
         elCell.classList.add('MINE', 'unclicked')
 
     }, 1500)
+
+    if (gManualMode.mines === 0) {
+        reset()
+        gManualMode.isOn = false
+    }
+}
+
+// in case the user presses reset while planting bombs
+function resetManualMode() {
+    gManualMode.isOn = false
+    gManualMode.mines = 0
 }

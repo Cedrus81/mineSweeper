@@ -1,21 +1,28 @@
 var safeclicks = 3
-var gMegaHint = {
-    isOn: false,
-    locations: [],
+var gHints = {
+    effectTimer: false,
+    hint: {
+        isOn: false
+    },
+    megaHints: {
+        isOn: false,
+        locations: [],
+    }
 }
 
 
 function hintMode(elHint) {
-    if (gGame.hintMode) {
+    if (gHints.hint.isOn) {
         return
     }
 
-    gGame.hintMode = true
+    gHints.hint.isOn = true
     elHint.classList.remove('hint')
     elHint.classList.add('hint-used')
 }
 
 function hintClicked(elCell) {
+    gHints.effectTimer = true
     let cellI = +elCell.getAttribute("data-i")
     let cellJ = +elCell.getAttribute("data-j")
     for (let i = cellI - 1; i < cellI + 2; i++) {
@@ -37,6 +44,7 @@ function hintClicked(elCell) {
                 newCell.classList.remove('expanded')
                 newCell.innerText = ' '
                 if (gBoard[i][j].isMarked) newCell.innerText = FLAG
+                gHints.effectTimer = false
             }, 1000)
         }
 
@@ -46,28 +54,29 @@ function hintClicked(elCell) {
 
 
 function megaHintMode(button) {
-    gMegaHint.isOn = true
+    gHints.megaHints.isOn = true
     console.log('choose 2 locations on the board');
-    button.disabled = true
+    disableAllBtns()
 }
 
 function megaHint(i, j) {
-    if (gMegaHint.locations.length <= 1) {
-        gMegaHint.locations.push({ i, j })
+    if (gHints.megaHints.locations.length <= 1) {
+        gHints.megaHints.locations.push({ i, j })
     }
-    if (gMegaHint.locations.length === 2) {
+    if (gHints.megaHints.locations.length === 2) {
         megaHintReveal()
     }
 }
 
 function megaHintReveal() {
+    gHints.effectTimer = true
 
     //find the smaller i and the smaller j
-    let smallI = Math.min(gMegaHint.locations[0].i, gMegaHint.locations[1].i)
-    let smallJ = Math.min(gMegaHint.locations[0].j, gMegaHint.locations[1].j)
+    let smallI = Math.min(gHints.megaHints.locations[0].i, gHints.megaHints.locations[1].i)
+    let smallJ = Math.min(gHints.megaHints.locations[0].j, gHints.megaHints.locations[1].j)
 
-    let bigI = Math.max(gMegaHint.locations[0].i, gMegaHint.locations[1].i)
-    let bigJ = Math.max(gMegaHint.locations[0].j, gMegaHint.locations[1].j)
+    let bigI = Math.max(gHints.megaHints.locations[0].i, gHints.megaHints.locations[1].i)
+    let bigJ = Math.max(gHints.megaHints.locations[0].j, gHints.megaHints.locations[1].j)
 
     let from = { i: smallI, j: smallJ }
     let to = { i: bigI, j: bigJ }
@@ -87,10 +96,13 @@ function megaHintReveal() {
                 newCell.classList.remove('expanded')
                 newCell.innerText = ' '
                 if (gBoard[i][j].isMarked) newCell.innerText = FLAG
+                gHints.effectTimer = false
             }, 1000)
         }
     }
-    gMegaHint.isOn = false
+    gHints.megaHints.isOn = false
+    enableAllBtns()
+    document.querySelector('#megaHint').disabled = true
 }
 
 
@@ -118,5 +130,24 @@ function getSafeCell() {
             }
             idx++
         }
+    }
+}
+
+function disableHints() {
+    let elHints = document.querySelectorAll('.hint')
+    for (const hint of elHints) {
+        hint.classList.add('hint-used')
+    }
+}
+
+function enableHints() {
+    gHints.effectTimer = false
+    gHints.hint.isOn = false
+    gHints.megaHints.isOn = false
+    gHints.megaHints.locations.splice(0)
+
+    let elHints = document.querySelectorAll('.hint')
+    for (const hint of elHints) {
+        hint.classList.remove('hint-used')
     }
 }

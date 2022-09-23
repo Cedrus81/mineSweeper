@@ -10,8 +10,8 @@ span{
     right:200px;
 }
 .hints{
-    width: max-content;
     text-align: center;
+    margin-bottom: 0.5rem;
 }
 .hint{
     cursor: pointer;
@@ -39,7 +39,7 @@ span{
 }
 
 footer{
-    position: fixed;
+    position: static;
     width: fit-content;
     border-top-right-radius:3px ;
     border-top-left-radius:3px ;
@@ -47,6 +47,7 @@ footer{
     background-color: #233142;
     color: #e3e3e3;
     bottom: 0;
+    margin-top: 1em;
 
 }
 .mine{
@@ -99,8 +100,29 @@ td{
 }
 
 .menu{
+    position: static;
+    margin-top: 1em;
+    width: fit-content;
+    border-top-right-radius:3px ;
+    border-top-left-radius:3px ;
+    padding: 20px;
+    background-color: #233142;
+    border-color: #233142;
     color: #e3e3e3;
-    margin-top: 50px;
+    bottom: 3.5em;
+    right: 0;
+}
+.menu td{
+    border-color: #233142;
+}
+.menu button{
+    width: max-content;
+    height: max-content;
+    font-family: 'Allerta Stencil';
+    border-color:#e3e3e3;
+    border-radius:  6px;
+    background-color:#a2c11c;
+    color:#233142;
 }
 
 

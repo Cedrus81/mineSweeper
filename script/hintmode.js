@@ -12,7 +12,7 @@ var gHints = {
 
 
 function hintMode(elHint) {
-    if (gHints.hint.isOn) {
+    if (gHints.hint.isOn || !gGame.isOn) {
         return
     }
 
@@ -54,6 +54,7 @@ function hintClicked(elCell) {
 
 
 function megaHintMode(button) {
+    if (button.classList.contains('disabled')) return
     gHints.megaHints.isOn = true
     console.log('choose 2 locations on the board');
     disableAllBtns()
@@ -102,17 +103,18 @@ function megaHintReveal() {
     }
     gHints.megaHints.isOn = false
     enableAllBtns()
-    document.querySelector('#megaHint').disabled = true
+    document.querySelector('#megaHint').classList.add('disabled')
 }
 
 
 function safeCell(elBtn) {
+    if (elBtn.classList.contains('disabled')) return
     gGame.safeclicks--
     let elCell = getSafeCell()
     elCell.classList.add('safeclick')
     elBtn.innerText = `Safe Clicks: ${gGame.safeclicks}`
     if (!gGame.safeclicks) {
-        elBtn.disabled = true
+        elBtn.classList.add('disabled')
     }
     setTimeout(() => elCell.classList.remove('safeclick'), 2000)
 }

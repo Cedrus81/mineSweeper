@@ -13,7 +13,11 @@ var gGame = {
     isVictory: false
 }
 
-var gLevel = { bestScore: 0 }
+var gLevel = {
+    bestScore: 0,
+    size: 8,
+    mines: 14
+}
 var gBoard
 //build board, render board, start timer
 function initGame(matSize, mineNum) {
@@ -201,4 +205,7 @@ function resetStats() {
     gGame.isOn = true
     gGame.seconds = 0
     gGame.lives = 3
+
+    gExterminateCount = 0
+    if (gExterminateCount) gLevel.mines += gExterminateCount
 }

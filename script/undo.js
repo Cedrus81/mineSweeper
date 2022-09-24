@@ -8,12 +8,13 @@ function saveMatrix() {
     gUndo.board[gUndo.counter] = structuredClone(gBoard)
     gUndo.stats[gUndo.counter] = { ...gGame }
     gUndo.counter++
-    document.querySelector('#undo').disabled = false
+    document.querySelector('#undo').classList.remove('disabled')
 }
 
 function undo(elBtn) {
+    if (elBtn.classList.contains('disabled')) return
     gUndo.counter--
-    if (gUndo.counter === 0) elBtn.disabled = true
+    if (gUndo.counter === 0) elBtn.classList.add('disabled')
     //model
     // attributes I want to keep:
     gUndo.stats[gUndo.counter].seconds = gGame.seconds
@@ -56,7 +57,7 @@ function renderUndo() {
 
 
 function resetUndo() {
-    document.querySelector('#undo').disabled = true
+    document.querySelector('#undo').classList.add('disabled')
     gUndo.board.splice(0)
     gUndo.stats.splice(0)
     gUndo.counter = 0

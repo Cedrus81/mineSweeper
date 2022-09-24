@@ -107,17 +107,19 @@ function startTimer() {
 
 
 function disableAllBtns() {
-    let elBtns = document.querySelectorAll('button')
+    let elBtns = document.querySelectorAll('.menu td')
     for (const btn of elBtns) {
-        btn.disabled = true
+        if (btn.classList.contains('difficulty')) continue
+        if (btn.id === 'dark') continue
+        btn.classList.add('disabled')
     }
 }
 
 function enableAllBtns() {
-    let elBtns = document.querySelectorAll(':disabled')
+    let elBtns = document.querySelectorAll('.disabled')
     for (btn of elBtns) {
         if (btn.id === 'undo') continue
-        btn.disabled = false
+        btn.classList.remove('disabled')
     }
 }
 
@@ -129,4 +131,16 @@ function renderStats() {
     document.querySelector('#lives').innerText = `Lives: ${gGame.lives}`
     document.querySelector('#score').innerText = `Score: ${gGame.shownCount}`
     document.querySelector('#safeClick').innerText = `Safe Clicks: ${gGame.safeclicks}`
+}
+
+
+
+function darkMode() {
+    let elBody = document.querySelector('body')
+    if (elBody.classList.contains('body-dark')) {
+        elBody.classList.remove('body-dark')
+    }
+    else {
+        elBody.classList.add('body-dark')
+    }
 }

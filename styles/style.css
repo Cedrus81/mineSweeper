@@ -1,10 +1,21 @@
 
 body{
+    background-image:
+    url("https://res.cloudinary.com/defz7xcxw/image/upload/v1662118942/CampingGear-2020-GettyImages-sb10070057l-001_mytqdy.jpg");
+    font-family: 'Allerta Stencil';
+    color: #233142;
+}
+.body-dark{
     background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
     url("https://res.cloudinary.com/defz7xcxw/image/upload/v1662118942/CampingGear-2020-GettyImages-sb10070057l-001_mytqdy.jpg");
 
     font-family: 'Allerta Stencil';
     color: #233142;
+}
+.dark-mode{
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url("https://res.cloudinary.com/defz7xcxw/image/upload/v1662118942/CampingGear-2020-GettyImages-sb10070057l-001_mytqdy.jpg");
+
 }
 span{
     right:200px;
@@ -14,6 +25,8 @@ span{
     margin-bottom: 0.5rem;
 }
 .hint{
+    margin-inline: 1em;
+    font-size: larger;
     cursor: pointer;
     transition: 0.5s;
 }
@@ -59,6 +72,7 @@ footer{
 }
 
 .unclicked{
+    transition: 0.2s;
     cursor: pointer;
     background-color: #233142;
     border: 1px solid;
@@ -106,24 +120,29 @@ td{
     border-top-right-radius:3px ;
     border-top-left-radius:3px ;
     padding: 20px;
-    background-color: #233142;
-    border-color: #233142;
+    background-color: rgba(35, 49, 67, 0.5);
+    border-color: rgba(35, 49, 67, 0.5);
     color: #e3e3e3;
     bottom: 3.5em;
-    right: 0;
 }
 .menu td{
-    border-color: #233142;
-}
-.menu button{
-    width: max-content;
+    background-color: rgba(18, 25, 34, 0.8);
+    border-radius: 2px;
+    border:0.3em solid ;
+    width:max-content;
     height: max-content;
-    font-family: 'Allerta Stencil';
-    border-color:#e3e3e3;
-    border-radius:  6px;
-    background-color:#a2c11c;
-    color:#233142;
+    cursor: pointer;
 }
+.menu td:hover{
+    transition: 0.2s;
+    background-color: rgba(161, 212, 200, 0.3);
+}
+
+.menu .disabled{
+    cursor: default;
+    background-color: #d1cebd80;
+}
+
 
 
 #timer{

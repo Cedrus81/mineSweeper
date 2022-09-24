@@ -1,7 +1,8 @@
+var gExterminateCount = 0
 
-
-function sBoom() {
+function sBoom(elBtn) {
     reset()
+    elBtn.classList.add('disabled')
     gGame.firstClick = false
     gGame.isOn = true
     arrange7BOOM()
@@ -35,11 +36,13 @@ function has7(counter) {
 
 
 function exterminate(elBtn) {
-    debugger
-    elBtn.disabled = true
+
+    if (elBtn.classList.contains('disabled')) return
     for (let i = 0; i < 3; i++) {
         let elCell = getUnsafeCell()
-        //model done
+        //model
+        let i = +elCell.getAttribute("data-i")
+        let j = +elCell.getAttribute("data-j")
 
         //DOM
         elCell.innerText = 'O'
@@ -47,9 +50,13 @@ function exterminate(elBtn) {
         gHints.effectTimer = true
         setTimeout(() => {
             elCell.classList.remove('planted')
-            elCell.innerText = ' '
+            elCell.innerText = gBoard[i][j].isShown ? setMinesNegsCount(gBoard, { i, j }) : ' '
             gHints.effectTimer = false
         }, 1000)
+        if (!gLevel.mines) {
+            elBtn.classList.add('disabled')
+            break
+        }
     }
 }
 
@@ -60,11 +67,12 @@ function getUnsafeCell() {
     let randIdx = getRandomInt(0, gLevel.mines - (3 - gGame.lives))
     for (let i = 0; i < gBoard.length; i++) {
         for (let j = 0; j < gBoard[i].length; j++) {
-            if (gBoard[i][j].isShown) continue
             if (gBoard[i][j].isMine) {
                 if (idx === randIdx) {
                     gBoard[i][j].isMine = false
+                    gExterminateCount++
                     gLevel.mines--
+
                     return document.querySelector(`td[data-i="${i}"][data-j="${j}"]`)
                 }
                 idx++

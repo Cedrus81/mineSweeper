@@ -191,6 +191,7 @@ function reset() {
     renderStats()
     enableAllBtns()
     resetUndo()
+    debugger
     enableHints()
 }
 

@@ -148,8 +148,9 @@ function enableHints() {
     gHints.megaHints.isOn = false
     gHints.megaHints.locations.splice(0)
 
-    let elHints = document.querySelectorAll('.hint')
+    let elHints = document.querySelectorAll('.hint-used')
     for (const hint of elHints) {
         hint.classList.remove('hint-used')
+        hint.classList.add('hint')
     }
 }

@@ -14,7 +14,7 @@ var gGame = {
 }
 
 var gLevel = {
-    bestScore: 0,
+    bestTime: Infinity,
     size: 8,
     mines: 14
 }
@@ -25,9 +25,9 @@ function initGame(matSize, mineNum) {
     gGame.isOn = true
     gLevel.size = matSize
     gLevel.mines = mineNum
-    buildBoard(matSize, mineNum)
-    renderBoard(gBoard)
 
+    buildBoard(gLevel.size, gLevel.mines)
+    renderBoard(gBoard)
 }
 
 
@@ -36,7 +36,7 @@ function cellClicked(elCell) {
     if (gHints.effectTimer) {
         return
     }
-    //get the DOM
+    //get the model
     let i = +elCell.getAttribute("data-i")
     let j = +elCell.getAttribute("data-j")
     if (gBoard[i][j].isShown) {
@@ -74,12 +74,16 @@ function clickOnMine(elCell) {
     if (gGame.firstClick) {
         gGame.markedCount++
         color = 'firstClick'
+        gLevel.mines--
+        gExterminateCount++
     }
     elCell.classList.add(color)
     elCell.innerText = MINE
     if (gGame.isOn && !gGame.firstClick) {
         gGame.lives--
-        elLives = document.querySelector('#lives')
+        gLevel.mines--
+        gExterminateCount++
+        let elLives = document.querySelector('#lives')
         elLives.innerText = `Lives: ${gGame.lives}`
         if (!gGame.lives) {
             gameOver()
@@ -106,8 +110,8 @@ function normalCell(elCell) {
     elCell.classList.add('expanded')
     gBoard[i][j].isShown = true
     if (gBoard[i][j].isMarked) gBoard[i][j].isMarked = false
-    elCell.innerText = setMinesNegsCount(gBoard, { i, j })
-    if (elCell.innerText == 0) { //on purpose 2 and not 3 '='s
+    elCell.innerText = is7Boom ? ' ' : setMinesNegsCount(gBoard, { i, j })
+    if (elCell.innerText == 0 && !is7Boom) { //on purpose 2 and not 3 '='s
         gGame.recursiveCounter++
         expandShown(gBoard, elCell, { i, j })
         gGame.recursiveCounter--
@@ -125,6 +129,7 @@ function cellMarked(elCell) {
     if (gBoard[i][j].isShown) {
         return
     }
+    saveMatrix()
     if (gBoard[i][j].isMarked) {
         gBoard[i][j].isMarked = false
         elCell.innerText = ' '
@@ -144,11 +149,6 @@ function cellMarked(elCell) {
 
 
 function checkScore() {
-    document.querySelector('#score').innerText = `Score: ${gGame.shownCount}`
-    if (gGame.shownCount > gLevel.bestScore) {
-        gLevel.bestScore = gGame.shownCount
-        document.querySelector('#best-score').innerText = `Best Score: ${gLevel.bestScore}`
-    }
     if (gGame.shownCount + gGame.markedCount + (3 - gGame.lives) === gLevel.size ** 2) {
         victory()
     }
@@ -163,6 +163,10 @@ function gameOver() {
 }
 
 function victory() {
+    if (gGame.seconds < gLevel.bestTime) {
+        gLevel.bestTime = gGame.seconds
+        document.querySelector('#best-score').innerText = `Best Time: ${gLevel.bestTime}`
+    }
     document.querySelector('#smiley').innerText = '😁'
     gGame.isOn = false
     gGame.isVictory = true
@@ -174,25 +178,19 @@ function checkGameOver() {
     disableAllBtns()
     disableHints()
     resetUndo()
-    let unclicked = document.querySelectorAll(".unclicked")
-    let hidden = document.querySelectorAll(".hidden")
-    for (let elCell of unclicked) {
-        cellClicked(elCell)
-    }
-    for (let span of hidden) {
-        span.classList.remove('hidden')
-    }
+    renderAll()
 }
 
 
 function reset() {
+
     clearInterval(timerId)
     resetStats()
     renderStats()
     enableAllBtns()
     resetUndo()
-    debugger
     enableHints()
+
 }
 
 
@@ -207,6 +205,7 @@ function resetStats() {
     gGame.seconds = 0
     gGame.lives = 3
 
-    gExterminateCount = 0
     if (gExterminateCount) gLevel.mines += gExterminateCount
+    gExterminateCount = 0
+    is7Boom = false
 }

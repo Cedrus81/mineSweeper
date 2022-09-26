@@ -14,8 +14,8 @@
     <div class="header">
         <span class="info" id="lives">Lives: 3</span>
         <span class="info" id="timer">Time: 0</span>
-        <span class="info" id="smiley" onclick="initGame(gLevel.size, gLevel.mines)">'😃'</span>
-        <span class="info" id="score">Score: 0</span>
+        <span class="info" id="smiley" onclick="initGame(gLevel.size, gLevel.mines + gExterminateCount)">'😃'</span>
+        <span class="info" id="mines">Mines: gLevel.mines</span>
         <span class="info" id="best-score">Best Score: 0</span>
     </div>
     <div class="hints">
@@ -26,7 +26,7 @@
 
     <table cellpadding="10"></table>
 
-    <div class="hints">
+    <div class="infoBoard">
 
     </div>
 
@@ -41,14 +41,14 @@
                 <td class="difficulty" onclick="initGame(12, 32)">Hard</td>
             </tr>
             <tr>
-                <td id="megaHint" onclick="megaHintMode(this)">Mega Hint</td>
-                <td id="safeClick" onclick="safeCell(this)">Safe Clicks: 3</td>
-                <td onclick="exterminate(this)">Exterminate</td>
+                <td onmouseover="info(this)" id="megaHint" onclick="megaHintMode(this)">Mega Hint</td>
+                <td onmouseover="info(this)" id="safeClick" onclick="safeCell(this)">Safe Clicks: 3</td>
+                <td onmouseover="info(this)" id="exterminate" onclick="exterminate(this)">Exterminate</td>
             </tr>
             <tr>
-                <td onclick="manualMode()">Manual Mode!</td>
-                <td onclick="undo(this)" disabled id="undo">Undo</td>
-                <td onclick="sBoom(this)">7BOOM</td>
+                <td onmouseover="info(this)" id="manualMode" onclick="manualMode()">Manual Mode!</td>
+                <td onmouseover="info(this)" id="undo" onclick="undo(this)" disabled id="undo">Undo</td>
+                <td onmouseover="info(this)" id="sBoom" onclick="sBoom(this)">7BOOM</td>
             </tr>
             <tr>
                 <td style="opacity: 0;"></td>

@@ -13,6 +13,7 @@ function saveMatrix() {
 
 function undo(elBtn) {
     if (elBtn.classList.contains('disabled')) return
+    document.querySelector('.infoBoard').innerText = `${gUndo.board.length} undo's left`
     gUndo.counter--
     if (gUndo.counter === 0) elBtn.classList.add('disabled')
     //model
@@ -47,7 +48,7 @@ function renderUndo() {
 
         }
     }
-    document.querySelector('#score').innerText = `Score: ${gGame.shownCount}`
+    document.querySelector('#mines').innerText = `Mines: ${gGame.shownCount}`
     document.querySelector('#smiley').innerText = '😃'
     document.querySelector('#lives').innerText = `Lives: ${gGame.lives}`
     gUndo.board.pop()

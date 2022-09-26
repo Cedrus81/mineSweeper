@@ -1,5 +1,7 @@
 
-var gManualMode = {}
+var gManualMode = {
+    isOn: false
+}
 
 function manualMode() {
     gManualMode.isOn = true
@@ -54,6 +56,7 @@ function plantBomb(elCell) {
         reset()
         gManualMode.isOn = false
     }
+    document.querySelector('.infoBoard').innerText = `Plant ${gManualMode.mines} more mines`
 }
 
 // in case the user presses reset while planting bombs

@@ -2,7 +2,7 @@ var safeclicks = 3
 var gHints = {
     effectTimer: false,
     hint: {
-        isOn: false
+        isOn: false,
     },
     megaHints: {
         isOn: false,
@@ -15,7 +15,7 @@ function hintMode(elHint) {
     if (gHints.hint.isOn || !gGame.isOn) {
         return
     }
-
+    document.querySelector('.infoBoard').innerText = `Choose a cell on the board to reveal it and it\'s neighbors`
     gHints.hint.isOn = true
     elHint.classList.remove('hint')
     elHint.classList.add('hint-used')

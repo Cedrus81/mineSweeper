@@ -1,7 +1,8 @@
 var gExterminateCount = 0
-
+var is7Boom = false
 function sBoom(elBtn) {
     reset()
+    is7Boom = true
     elBtn.classList.add('disabled')
     gGame.firstClick = false
     gGame.isOn = true
@@ -64,15 +65,15 @@ function exterminate(elBtn) {
 function getUnsafeCell() {
 
     let idx = 0
-    let randIdx = getRandomInt(0, gLevel.mines - (3 - gGame.lives))
+    let randIdx = getRandomInt(0, gLevel.mines)
     for (let i = 0; i < gBoard.length; i++) {
         for (let j = 0; j < gBoard[i].length; j++) {
+            if (gBoard[i][j].isShown) continue
             if (gBoard[i][j].isMine) {
                 if (idx === randIdx) {
                     gBoard[i][j].isMine = false
                     gExterminateCount++
                     gLevel.mines--
-
                     return document.querySelector(`td[data-i="${i}"][data-j="${j}"]`)
                 }
                 idx++

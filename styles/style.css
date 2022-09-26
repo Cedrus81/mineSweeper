@@ -12,14 +12,19 @@ body{
     font-family: 'Allerta Stencil';
     color: #233142;
 }
-.dark-mode{
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-    url("https://res.cloudinary.com/defz7xcxw/image/upload/v1662118942/CampingGear-2020-GettyImages-sb10070057l-001_mytqdy.jpg");
 
+.infoBoard{
+    color: #e3e3e3;
+    text-align: center;
+    background-color: #233142;
+    margin: auto;
+    margin-top: 1em;
+    height: fit-content;
+    width: fit-content;
+    padding: 1em;
+    border-radius: 4px;
 }
-span{
-    right:200px;
-}
+
 .hints{
     text-align: center;
     margin-bottom: 0.5rem;

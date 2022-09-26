@@ -1,7 +1,17 @@
+var gMessages = {
+    megaHint: 'Choose two cells to reveal the square between them',
+    manualMode: `Plant ${gLevel.mines} mines on the board and play!`,
+    sBoom: 'Play 7 boom, cells can only be revealed one by one, and do not show numbers',
+    exterminate: `Exterminate ${3 > gLevel.mines ? 3 : gLevel.mines} of the ${gLevel.mines} currently unrevealed mines`,
+    safeClick: `A safe non-mine cell will be marked in green`,
+    undo: 'Undo the last move',
+}
+
+
+
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min)) + min
 }
-
 
 
 function buildBoard(matSize, mineNum) {
@@ -63,7 +73,7 @@ function renderBoard(board) {
     for (let i = 0; i < board.length; i++) {
         strHTML += '\t\n<tr>\n'
         for (let j = 0; j < board[i].length; j++) {
-            let text = board[i][j].isMine ? MINE : setMinesNegsCount(gBoard, { i, j })
+            let text = board[i][j].isMine ? MINE : is7Boom ? ' ' : setMinesNegsCount(gBoard, { i, j })
             let func = gManualMode.isOn ? "plantBomb(this)" : "cellClicked(this)"
             strHTML += `\t<td data-i="${i}" data-j="${j}" `
             strHTML += `onclick=${func} oncontextmenu="cellMarked(this); return false;" `
@@ -129,8 +139,19 @@ function renderStats() {
     document.querySelector('#smiley').innerText = '😃'
     document.querySelector('#timer').innerText = `Time: ${gGame.seconds}`
     document.querySelector('#lives').innerText = `Lives: ${gGame.lives}`
-    document.querySelector('#score').innerText = `Score: ${gGame.shownCount}`
+    document.querySelector('#mines').innerText = `Mines: ${gLevel.mines}`
     document.querySelector('#safeClick').innerText = `Safe Clicks: ${gGame.safeclicks}`
+}
+
+function renderAll() {
+    let unclicked = document.querySelectorAll(".unclicked")
+    let hidden = document.querySelectorAll(".hidden")
+    for (let elCell of unclicked) {
+        cellClicked(elCell)
+    }
+    for (let span of hidden) {
+        span.classList.remove('hidden')
+    }
 }
 
 
@@ -143,4 +164,31 @@ function darkMode() {
     else {
         elBody.classList.add('body-dark')
     }
+}
+
+function info(elBtn) {
+    let elInfoBoard = document.querySelector('.infoBoard')
+    let text = ''
+    switch (elBtn.id) {
+        case 'megaHint':
+            text = 'Choose two cells to reveal the square between them'
+            break;
+        case 'manualMode':
+            text = `Plant ${gLevel.mines} mines on the board and play!`
+            break;
+        case 'sBoom':
+            text = 'Play 7 boom, cells can only be revealed one by one, and do not show numbers'
+            break
+        case 'exterminate':
+            text = `Exterminate ${3 < gLevel.mines ? 3 : gLevel.mines} of the ${gLevel.mines} currently unrevealed mines`
+            break
+        case 'safeClick':
+            text = `A safe non-mine cell will be marked in green`
+            break
+        case 'undo':
+            text = 'Undo the last move'
+            break
+    }
+    elInfoBoard.innerText = text
+
 }
